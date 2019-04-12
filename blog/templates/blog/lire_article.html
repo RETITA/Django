@@ -1,0 +1,60 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ article.titre }}{% endblock %}
+
+{% block content %}
+<br>
+	<p>
+		<a class="btn btn-secondary" role="button" href="{% url 'accueil' %}">Retour à la liste des articles</a>
+	</p>
+	<div class="card">
+		<div class="card-header">
+			{{ article.titre }}
+			<p>
+				<i>Le {{ article.date|date:'SHORT_DATETIME_FORMAT' }}, {{ commentsVisible.count }} commentaire{{ commentsVisible.count|pluralize }}.</i>
+			</p>
+		</div>
+		<div class="card-body">
+			{{ article.contenu|safe }}
+		</div>
+	</div>
+	<br>
+
+	<h3 class="titre-comments">Commentaires</h3>
+	<div class="card">
+		<div class="card-header">
+			Poster votre propre commentaire
+		</div>
+		<div class="card-body">
+			<form method="post" action="" class="pure-form">
+				<!-- A vous de remplir le formulaire également -->
+				{% csrf_token %}
+				{% for field in form %}
+					<div class="form-group row">
+						<div class="col-sm-3">
+							{{ field.label_tag }}{% if field.field.required %}<span class="required text-danger"> *</span>{% endif %}
+						</div>
+						<div class="col-sm-9">
+							{{ field }}
+						</div>
+					</div>
+				{% endfor %}
+				
+				<button type="submit" class="float-right btn btn-primary">Submit</button>
+			</form>
+		</div>
+	</div><br>
+
+	{% for comment in article.comment_set.all %}
+		{% if comment.is_visible %}
+			<div class="card">
+				<div class="card-body">
+					<p><strong>{{ comment.pseudo }}</strong></p>	
+					<p><i>{{ comment.description }}</i></p>	
+				</div>
+			</div>
+			<br>
+		{% endif %}
+	{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Accueil du blog{% endblock %}
+
+{% block content %}
+	<h1>Derniers articles</h1>
+
+	{% for article in articles %}
+		<div class="card">
+			<div class="card-header">
+				{{ article.titre }}
+				<p>
+					<i>Le {{ article.date|date:'SHORT_DATETIME_FORMAT' }}, {{ article.comment_set.count }} commentaire{{ article.comment_set.count|pluralize }}.</i>
+				</p>
+			</div>
+			<div class="card-body">
+				{{ article.contenu|safe|truncatewords_html:30 }}
+				<p><a href="{% url 'blog_lire' article.slug %}">Lire la suite</a></p>
+			</div>
+		</div>
+		<br>
+	{% endfor %}
+
+{% endblock %}
